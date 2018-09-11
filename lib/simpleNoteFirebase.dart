@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.center,
           child: StreamBuilder(
             stream: Firestore.instance.collection('NoteItem').snapshots(),
-            builder: (context,snapshot){
+            builder: (context,AsyncSnapshot snapshot){
               if (!snapshot.hasData)
                 return new Container(alignment: AlignmentDirectional.center,child: new CircularProgressIndicator(),);
 

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'simpleNote.dart';
 import 'simpleNoteDb.dart';
 import 'simpleNoteFirebase.dart';
+import 'test.dart';
+import 'myAppWithDrawer.dart';
 
-void main() => runApp(new MySimpleNoteFirebase());
+void main() => runApp(new MyAppWithDrawer());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

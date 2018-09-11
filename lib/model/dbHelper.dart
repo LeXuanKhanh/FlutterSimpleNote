@@ -40,11 +40,12 @@ class DBHelper{
     var dbClient = await db;
     List<Map> list = await dbClient.rawQuery('SELECT * FROM NoteItem');
     List<NoteItem> items = new List();
+    print( "this is database data ");
     for (int i = 0; i < list.length; i++) {
-      items.add(new NoteItem(list[i]["title"], list[i]["content"], DateTime.parse(list[i]["date"]), list[i]["kind"]));
-      print("printed item");
+      NoteItem newItem = new NoteItem(list[i]["title"], list[i]["content"], DateTime.parse(list[i]["date"]), list[i]["kind"]);
+      items.add(newItem);
+      print(newItem.title + ' || ' + newItem.content + " || " + newItem.datetime.toString() + " || " + newItem.kind);
     }
-    print( "item length: " + items.length.toString());
     return  items;
   }
 
