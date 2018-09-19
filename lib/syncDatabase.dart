@@ -5,7 +5,7 @@ import 'model/dbHelper.dart';
 import 'model/noteItem.dart';
 
 
-class Test extends StatelessWidget {
+class SyncDatabase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -103,9 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Test"),
-      ),
       body: Column(
         children: <Widget>[
           new ListTile(

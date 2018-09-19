@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'simpleNote.dart';
 import 'simpleNoteDb.dart';
 import 'simpleNoteFirebase.dart';
-import 'test.dart';
+import 'syncDatabase.dart';
+import 'loginScreen.dart';
 
 class MyAppWithDrawer extends StatelessWidget {
   // This widget is the root of your application.
@@ -25,7 +28,6 @@ class DrawerItem {
 }
 
 class MyHomePage extends StatefulWidget {
-  //MyHomePage({Key key, this.title}) : super(key: key);
 
   String title = "Simple Note No Database";
 
@@ -33,8 +35,8 @@ class MyHomePage extends StatefulWidget {
     new DrawerItem("Simple Note No Database"),
     new DrawerItem("Simple Note Database"),
     new DrawerItem("Simple Note Firebase"),
-    new DrawerItem("Test"),
-    new DrawerItem('Simple Note Sync '),
+    new DrawerItem("Simple Note Sync"),
+    new DrawerItem('Test'),
   ];
 
   @override
@@ -54,12 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2:
         return new MySimpleNoteFirebase();
       case 3:
-        return new Test();
+        return new SyncDatabase();
       case 4:
-        return new Text("Coming Soon");
+        return new LoginScreen();
       default:
         return new Text("Error");
-    }
+  }
   }
 
   _onSelectItem(int index) {
@@ -68,6 +70,12 @@ class _MyHomePageState extends State<MyHomePage> {
       widget.title = widget.drawerItems[index].title;
     });
     Navigator.of(context).pop(); // close the drawer
+  }
+
+  @override
+  void initState(){
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -93,10 +101,32 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: new Drawer(
         child: new Column(
           children: <Widget>[
-            /*
-            new UserAccountsDrawerHeader(
-                accountName: new Text("John Doe"), accountEmail: null),
-            */
+            new FutureBuilder(
+                future: SharedPreferences.getInstance(),
+                builder: (context,snapshot){
+                  if (snapshot.hasData){
+                    SharedPreferences prefs = snapshot.data;
+                    if (prefs.getString('userAvatarUrl') != '')
+                      return UserAccountsDrawerHeader(
+                        accountName: new Text(prefs.getString("userDisplayName")),
+                        accountEmail: new Text(prefs.getString("userEmail")),
+                        currentAccountPicture: new CircleAvatar( backgroundImage: new NetworkImage(prefs.getString("userAvatarUrl")) ),
+                      );
+                    else
+                      return UserAccountsDrawerHeader(
+                        accountName: new Text(prefs.getString("userDisplayName")),
+                        accountEmail: new Text(prefs.getString("userEmail")),
+                        currentAccountPicture: new CircleAvatar( backgroundImage: new AssetImage('assets/avatar.png') ),
+                      );
+                  }
+                  else
+                    return UserAccountsDrawerHeader(
+                      accountName: new Text('loading...'),
+                      accountEmail: new Text('loading...'),
+                      currentAccountPicture: new CircleAvatar( backgroundImage: new AssetImage('assets/avatar.png') ),
+                    );
+                }
+            ),
             new Column(children: drawerOptions)
           ],
         ),

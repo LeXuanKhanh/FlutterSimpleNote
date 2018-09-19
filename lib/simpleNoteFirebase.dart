@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:intl/intl.dart';
 import 'package:flutter_simple_note/model/noteItem.dart';
@@ -128,19 +129,30 @@ class _MyHomePageState extends State<MyHomePage> {
         body: new Container(
           padding: const EdgeInsets.only(top: 10.0),
           alignment: Alignment.center,
-          child: StreamBuilder(
-            stream: Firestore.instance.collection('NoteItem').snapshots(),
-            builder: (context,AsyncSnapshot snapshot){
-              if (!snapshot.hasData)
-                return new Container(alignment: AlignmentDirectional.center,child: new CircularProgressIndicator(),);
+          child: FutureBuilder(
+              future: SharedPreferences.getInstance(),
+              builder: (context,result){
+                if (result.hasData){
+                  SharedPreferences prefs = result.data;
+                  if (prefs.getString('userEmail') == 'unknown email from SharedPreferences')
+                    return new Text('you must log in to see online database');
+                  else
+                    return StreamBuilder(
+                      stream: Firestore.instance.collection(prefs.getString('userEmail')).snapshots(),
+                      builder: (context,AsyncSnapshot snapshot){
+                        if (!snapshot.hasData)
+                          return new Container(alignment: AlignmentDirectional.center,child: new CircularProgressIndicator(),);
 
-              return ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, position) =>
-                    _listItem(context, snapshot.data.documents[position]),
-              );
-            }
-          )
+                        return ListView.builder(
+                          itemCount: snapshot.data.documents.length,
+                          itemBuilder: (context, position) => _listItem(context, snapshot.data.documents[position]),
+                        );
+                      }
+                    );
+                }
+                else
+                  return new Container(alignment: AlignmentDirectional.center,child: new CircularProgressIndicator(),);
+          })
         ),
     );
   }

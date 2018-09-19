@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
-import 'simpleNote.dart';
-import 'simpleNoteDb.dart';
-import 'simpleNoteFirebase.dart';
-import 'test.dart';
 import 'myAppWithDrawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(new MyAppWithDrawer());
+void main() {
+  initSharePreferences();
+  runApp(new MyAppWithDrawer());
+}
+
+//init shared gmail user data in SharedPreferences
+void initSharePreferences() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.getString('userDisplayName') == null)
+    await prefs.setString('userDisplayName', 'unknown user from SharedPreferences');
+  if (prefs.getString('userEmail') == null)
+    await prefs.setString('userEmail', 'unknown email from SharedPreferences');
+  if (prefs.getString('userAvatarUrl') == null)
+    await prefs.setString('userAvatarUrl', '');
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

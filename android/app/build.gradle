@@ -38,6 +38,9 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    defaultConfig {
+        multiDexEnabled true
+    }
 }
 
 flutter {
