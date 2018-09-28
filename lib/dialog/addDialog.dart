@@ -46,7 +46,6 @@ class AddDialogState extends State<AddDialog> {
                 //TODO: Handle save
                 Navigator
                     .of(context)
-                    //.pop(new NoteItem(myControllerTitle.text,myControllerContent.text,_date,_time,_currentNoteKind));
                     .pop(new NoteItem(myControllerTitle.text,myControllerContent.text,DateTime(_date.year,_date.month,_date.day,_time.hour,_time.minute),_currentNoteKind));
               },
               child: new Text('SAVE',

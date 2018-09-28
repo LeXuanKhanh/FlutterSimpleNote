@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return new LoginScreen();
       default:
         return new Text("Error");
-  }
+    }
   }
 
   _onSelectItem(int index) {
